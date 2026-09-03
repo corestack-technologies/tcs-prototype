@@ -1,61 +1,192 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import 'tailwindcss';
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-border: var(--border);
-  --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 2px);
-  --radius-md: var(--radius);
-  --radius-lg: calc(var(--radius) + 4px);
+  --color-background: var(--tcs-bg);
+  --color-foreground: var(--tcs-text);
+  --color-card: var(--tcs-surface);
+  --color-card-foreground: var(--tcs-text);
+  --color-primary: var(--tcs-brand);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--tcs-brand-soft);
+  --color-secondary-foreground: var(--tcs-brand);
+  --color-muted: var(--tcs-surface-muted);
+  --color-muted-foreground: var(--tcs-text-muted);
+  --color-accent: var(--tcs-success);
+  --color-accent-foreground: #ffffff;
+  --color-border: var(--tcs-border);
+  --color-ring: var(--tcs-focus);
+  --radius-sm: var(--tcs-radius-sm);
+  --radius-md: var(--tcs-radius-md);
+  --radius-lg: var(--tcs-radius-lg);
 }
 
 :root {
-  --background: #F4F6FA;
-  --foreground: #0D1117;
-  --card: #FFFFFF;
-  --card-foreground: #0D1117;
-  --primary: #1746A2;
-  --primary-foreground: #FFFFFF;
-  --secondary: #EEF2FF;
-  --secondary-foreground: #1746A2;
-  --muted: #F1F3F8;
-  --muted-foreground: #6B7280;
-  --accent: #059669;
-  --accent-foreground: #FFFFFF;
-  --border: #E2E6F0;
-  --ring: #1746A2;
-  --radius: 10px;
+  color-scheme: light;
 
-  font-family: 'Inter', system-ui, sans-serif;
+  --tcs-brand-900: #08245c;
+  --tcs-brand-800: #0b327c;
+  --tcs-brand-700: #11459e;
+  --tcs-brand: #1554c0;
+  --tcs-brand-500: #276de0;
+  --tcs-brand-soft: #eaf1ff;
+  --tcs-brand-subtle: #f5f8ff;
+
+  --tcs-success: #0f8f63;
+  --tcs-success-700: #08714d;
+  --tcs-success-soft: #e8f7f0;
+  --tcs-warning: #b7791f;
+  --tcs-warning-soft: #fff5dc;
+  --tcs-danger: #c2413a;
+  --tcs-danger-soft: #fff0ef;
+  --tcs-info: #2563eb;
+  --tcs-info-soft: #eaf1ff;
+
+  --tcs-bg: #f6f2eb;
+  --tcs-bg-cool: #f5f7fb;
+  --tcs-surface: #ffffff;
+  --tcs-surface-raised: #fffdf9;
+  --tcs-surface-muted: #f3f0e9;
+  --tcs-surface-blue: #f6f9ff;
+  --tcs-border: #ded8ce;
+  --tcs-border-strong: #c9c0b3;
+
+  --tcs-text: #111827;
+  --tcs-text-soft: #374151;
+  --tcs-text-muted: #687385;
+  --tcs-text-faint: #98a1b2;
+
+  --tcs-shadow-sm: 0 1px 2px rgba(17, 24, 39, 0.05);
+  --tcs-shadow-md: 0 12px 28px rgba(8, 36, 92, 0.08);
+  --tcs-shadow-lg: 0 24px 60px rgba(8, 36, 92, 0.12);
+
+  --tcs-radius-xs: 6px;
+  --tcs-radius-sm: 8px;
+  --tcs-radius-md: 10px;
+  --tcs-radius-lg: 14px;
+  --tcs-radius-xl: 18px;
+
+  --tcs-space-page-x: clamp(1rem, 2.4vw, 2rem);
+  --tcs-space-page-y: clamp(1.25rem, 2vw, 2rem);
+  --tcs-focus: #1554c0;
+  --tcs-focus-ring: 0 0 0 3px rgba(21, 84, 192, 0.18);
+
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+}
+
+html {
+  min-width: 320px;
+  background: var(--tcs-bg);
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  margin: 0;
+  min-width: 320px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(21, 84, 192, 0.08), transparent 30rem),
+    linear-gradient(180deg, var(--tcs-bg) 0%, #fbfaf7 48%, var(--tcs-bg-cool) 100%);
+  color: var(--tcs-text);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
 
-.display-font { font-family: 'Plus Jakarta Sans', sans-serif; }
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+::selection {
+  background: rgba(21, 84, 192, 0.18);
+  color: var(--tcs-brand-900);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cfc8bd;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a9a094;
+}
+
+.display-font {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0;
+}
+
+.tcs-page {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(21, 84, 192, 0.08), transparent 30rem),
+    linear-gradient(180deg, #fbfaf7 0%, var(--tcs-bg-cool) 100%);
+}
+
+.tcs-surface {
+  background: var(--tcs-surface);
+  border: 1px solid var(--tcs-border);
+  box-shadow: var(--tcs-shadow-sm);
+}
+
+.tcs-surface-raised {
+  background: var(--tcs-surface-raised);
+  border: 1px solid var(--tcs-border);
+  box-shadow: var(--tcs-shadow-md);
+}
+
+.tcs-link {
+  color: var(--tcs-brand);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.tcs-link:hover {
+  color: var(--tcs-brand-800);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tcs-label {
+  color: var(--tcs-text-faint);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tcs-kpi {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

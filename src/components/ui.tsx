@@ -1,7 +1,5 @@
 import { type ReactNode, type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
 
-// ── Button ──────────────────────────────────────────────────────────────────
-
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'success'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
@@ -13,38 +11,36 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
-  primary: 'bg-[#1746A2] text-white hover:bg-[#143d8f] active:bg-[#102f6e]',
-  secondary: 'bg-[#EEF2FF] text-[#1746A2] hover:bg-[#E0E8FF] border border-[#C7D2FE]',
-  ghost: 'bg-transparent text-[#6B7280] hover:bg-[#F1F3F8] hover:text-[#0D1117]',
-  danger: 'bg-[#DC2626] text-white hover:bg-[#B91C1C]',
-  success: 'bg-[#059669] text-white hover:bg-[#047857]',
+  primary: 'bg-[var(--tcs-brand)] text-white border border-[var(--tcs-brand)] hover:bg-[var(--tcs-brand-800)] hover:border-[var(--tcs-brand-800)] shadow-[var(--tcs-shadow-sm)]',
+  secondary: 'bg-[var(--tcs-brand-soft)] text-[var(--tcs-brand-800)] border border-[#c7d6f6] hover:bg-[#dfeaff]',
+  ghost: 'bg-transparent text-[var(--tcs-text-muted)] border border-transparent hover:bg-[var(--tcs-surface-muted)] hover:text-[var(--tcs-text)]',
+  danger: 'bg-[var(--tcs-danger)] text-white border border-[var(--tcs-danger)] hover:bg-[#a73530]',
+  success: 'bg-[var(--tcs-success)] text-white border border-[var(--tcs-success)] hover:bg-[var(--tcs-success-700)]',
 }
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'px-3 py-1.5 text-sm rounded-lg',
-  md: 'px-4 py-2.5 text-sm rounded-[10px]',
-  lg: 'px-6 py-3 text-base rounded-[10px]',
+  sm: 'h-9 px-3 text-sm rounded-[var(--tcs-radius-sm)]',
+  md: 'h-10 px-4 text-sm rounded-[var(--tcs-radius-md)]',
+  lg: 'h-12 px-5 text-base rounded-[var(--tcs-radius-md)]',
 }
 
 export function Button({ variant = 'primary', size = 'md', loading, children, className = '', disabled, ...props }: ButtonProps) {
   return (
     <button
       disabled={disabled || loading}
-      className={`inline-flex items-center justify-center gap-2 font-semibold transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-[#1746A2] focus-visible:ring-offset-2 ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-all duration-150 disabled:opacity-55 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(21,84,192,0.18)] focus-visible:ring-offset-2 focus-visible:ring-offset-white ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
       {...props}
     >
       {loading && (
-        <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
+        <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+          <path className="opacity-80" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
         </svg>
       )}
       {children}
     </button>
   )
 }
-
-// ── Form Field ───────────────────────────────────────────────────────────────
 
 interface FieldProps {
   label: string
@@ -57,15 +53,15 @@ interface FieldProps {
 export function Field({ label, hint, error, required, children }: FieldProps) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-semibold text-[#0D1117]">
+      <label className="text-sm font-semibold text-[var(--tcs-text)]">
         {label}
-        {required && <span className="text-[#DC2626] ml-1">*</span>}
+        {required && <span className="ml-1 text-[var(--tcs-danger)]">*</span>}
       </label>
       {children}
-      {hint && !error && <p className="text-xs text-[#6B7280]">{hint}</p>}
+      {hint && !error && <p className="text-xs leading-relaxed text-[var(--tcs-text-muted)]">{hint}</p>}
       {error && (
-        <p className="text-xs text-[#DC2626] flex items-center gap-1">
-          <svg className="w-3.5 h-3.5 shrink-0" viewBox="0 0 16 16" fill="currentColor">
+        <p className="flex items-center gap-1.5 text-xs font-medium text-[var(--tcs-danger)]">
+          <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
             <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm-.75 4.25a.75.75 0 011.5 0v3a.75.75 0 01-1.5 0v-3zm.75 6.5a.875.875 0 110-1.75.875.875 0 010 1.75z" />
           </svg>
           {error}
@@ -75,30 +71,34 @@ export function Field({ label, hint, error, required, children }: FieldProps) {
   )
 }
 
-// ── Input ────────────────────────────────────────────────────────────────────
-
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: boolean
   prefix?: ReactNode
   suffix?: ReactNode
 }
 
+const controlBase = 'w-full text-sm text-[var(--tcs-text)] placeholder:text-[var(--tcs-text-faint)] transition-colors focus:outline-none'
+const controlFrame = 'bg-white border rounded-[var(--tcs-radius-md)] focus-within:ring-[3px] focus-within:ring-[rgba(21,84,192,0.18)] focus-within:border-[var(--tcs-brand)]'
+
 export function Input({ error, prefix, suffix, className = '', ...props }: InputProps) {
-  const base = `w-full px-3.5 py-2.5 text-sm bg-white border rounded-[10px] text-[#0D1117] placeholder:text-[#9CA3AF] transition-colors focus:outline-none focus:ring-2 focus:ring-[#1746A2] focus:border-transparent`
-  const borderColor = error ? 'border-[#DC2626]' : 'border-[#E2E6F0]'
+  const border = error ? 'border-[var(--tcs-danger)]' : 'border-[var(--tcs-border)]'
   if (prefix || suffix) {
     return (
-      <div className={`flex items-center w-full bg-white border rounded-[10px] overflow-hidden transition-colors focus-within:ring-2 focus-within:ring-[#1746A2] focus-within:border-transparent ${error ? 'border-[#DC2626]' : 'border-[#E2E6F0]'}`}>
-        {prefix && <span className="pl-3.5 pr-2 text-[#6B7280] shrink-0">{prefix}</span>}
-        <input className={`flex-1 py-2.5 pr-3.5 text-sm bg-transparent text-[#0D1117] placeholder:text-[#9CA3AF] focus:outline-none ${prefix ? '' : 'pl-3.5'} ${className}`} {...props} />
-        {suffix && <span className="pr-3.5 pl-2 text-[#6B7280] shrink-0">{suffix}</span>}
+      <div className={`flex h-11 w-full items-center overflow-hidden ${controlFrame} ${border}`}>
+        {prefix && <span className="shrink-0 pl-3.5 pr-2 text-[var(--tcs-text-muted)]">{prefix}</span>}
+        <input className={`h-full min-w-0 flex-1 bg-transparent pr-3.5 ${prefix ? '' : 'pl-3.5'} ${controlBase} ${className}`} {...props} />
+        {suffix && <span className="shrink-0 pl-2 pr-3.5 text-[var(--tcs-text-muted)]">{suffix}</span>}
       </div>
     )
   }
-  return <input className={`${base} ${borderColor} ${className}`} {...props} />
-}
 
-// ── Select ───────────────────────────────────────────────────────────────────
+  return (
+    <input
+      className={`h-11 px-3.5 ${controlBase} bg-white border rounded-[var(--tcs-radius-md)] focus:ring-[3px] focus:ring-[rgba(21,84,192,0.18)] focus:border-[var(--tcs-brand)] ${border} ${className}`}
+      {...props}
+    />
+  )
+}
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   error?: boolean
@@ -108,15 +108,13 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 export function Select({ error, children, className = '', ...props }: SelectProps) {
   return (
     <select
-      className={`w-full px-3.5 py-2.5 text-sm bg-white border rounded-[10px] text-[#0D1117] transition-colors focus:outline-none focus:ring-2 focus:ring-[#1746A2] focus:border-transparent appearance-none cursor-pointer ${error ? 'border-[#DC2626]' : 'border-[#E2E6F0]'} ${className}`}
+      className={`h-11 w-full appearance-none rounded-[var(--tcs-radius-md)] border bg-white px-3.5 text-sm text-[var(--tcs-text)] transition-colors focus:outline-none focus:ring-[3px] focus:ring-[rgba(21,84,192,0.18)] focus:border-[var(--tcs-brand)] ${error ? 'border-[var(--tcs-danger)]' : 'border-[var(--tcs-border)]'} ${className}`}
       {...props}
     >
       {children}
     </select>
   )
 }
-
-// ── Textarea ─────────────────────────────────────────────────────────────────
 
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: boolean
@@ -125,13 +123,11 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 export function Textarea({ error, className = '', ...props }: TextareaProps) {
   return (
     <textarea
-      className={`w-full px-3.5 py-2.5 text-sm bg-white border rounded-[10px] text-[#0D1117] placeholder:text-[#9CA3AF] transition-colors focus:outline-none focus:ring-2 focus:ring-[#1746A2] focus:border-transparent resize-none ${error ? 'border-[#DC2626]' : 'border-[#E2E6F0]'} ${className}`}
+      className={`w-full resize-none rounded-[var(--tcs-radius-md)] border bg-white px-3.5 py-2.5 text-sm text-[var(--tcs-text)] placeholder:text-[var(--tcs-text-faint)] transition-colors focus:outline-none focus:ring-[3px] focus:ring-[rgba(21,84,192,0.18)] focus:border-[var(--tcs-brand)] ${error ? 'border-[var(--tcs-danger)]' : 'border-[var(--tcs-border)]'} ${className}`}
       {...props}
     />
   )
 }
-
-// ── Card ─────────────────────────────────────────────────────────────────────
 
 interface CardProps {
   children: ReactNode
@@ -140,15 +136,13 @@ interface CardProps {
 }
 
 export function Card({ children, className = '', padding = 'md' }: CardProps) {
-  const padMap = { sm: 'p-4', md: 'p-6', lg: 'p-8' }
+  const padMap = { sm: 'p-4', md: 'p-5', lg: 'p-6 sm:p-7' }
   return (
-    <div className={`bg-white rounded-xl border border-[#E2E6F0] shadow-sm ${padMap[padding]} ${className}`}>
+    <div className={`tcs-surface rounded-[var(--tcs-radius-lg)] ${padMap[padding]} ${className}`}>
       {children}
     </div>
   )
 }
-
-// ── Badge ─────────────────────────────────────────────────────────────────────
 
 type BadgeVariant = 'not-started' | 'pending' | 'verified' | 'rejected' | 'info'
 
@@ -158,39 +152,40 @@ interface BadgeProps {
 }
 
 const badgeStyles: Record<BadgeVariant, string> = {
-  'not-started': 'bg-[#F3F4F6] text-[#6B7280]',
-  pending: 'bg-[#FEF3C7] text-[#92400E]',
-  verified: 'bg-[#D1FAE5] text-[#065F46]',
-  rejected: 'bg-[#FEE2E2] text-[#991B1B]',
-  info: 'bg-[#DBEAFE] text-[#1E40AF]',
+  'not-started': 'bg-[var(--tcs-surface-muted)] text-[var(--tcs-text-muted)] border-[var(--tcs-border)]',
+  pending: 'bg-[var(--tcs-warning-soft)] text-[#8a5b12] border-[#efd38e]',
+  verified: 'bg-[var(--tcs-success-soft)] text-[#08714d] border-[#b7dfcc]',
+  rejected: 'bg-[var(--tcs-danger-soft)] text-[#9b312c] border-[#ecc1bd]',
+  info: 'bg-[var(--tcs-info-soft)] text-[var(--tcs-brand-800)] border-[#c7d6f6]',
+}
+
+const badgeDot: Record<BadgeVariant, string> = {
+  'not-started': 'bg-[var(--tcs-text-faint)]',
+  pending: 'bg-[var(--tcs-warning)]',
+  verified: 'bg-[var(--tcs-success)]',
+  rejected: 'bg-[var(--tcs-danger)]',
+  info: 'bg-[var(--tcs-info)]',
 }
 
 export function Badge({ variant, children }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${badgeStyles[variant]}`}>
-      {variant === 'verified' && <span className="w-1.5 h-1.5 rounded-full bg-[#059669]" />}
-      {variant === 'pending' && <span className="w-1.5 h-1.5 rounded-full bg-[#D97706]" />}
-      {variant === 'rejected' && <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" />}
-      {variant === 'not-started' && <span className="w-1.5 h-1.5 rounded-full bg-[#9CA3AF]" />}
+    <span className={`inline-flex items-center gap-1.5 rounded-[var(--tcs-radius-xs)] border px-2 py-1 text-xs font-bold ${badgeStyles[variant]}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${badgeDot[variant]}`} />
       {children}
     </span>
   )
 }
 
-// ── Divider ───────────────────────────────────────────────────────────────────
-
 export function Divider({ label }: { label?: string }) {
-  if (!label) return <hr className="border-[#E2E6F0] my-4" />
+  if (!label) return <hr className="my-4 border-[var(--tcs-border)]" />
   return (
-    <div className="flex items-center gap-3 my-4">
-      <hr className="flex-1 border-[#E2E6F0]" />
-      <span className="text-xs text-[#9CA3AF] font-medium">{label}</span>
-      <hr className="flex-1 border-[#E2E6F0]" />
+    <div className="my-4 flex items-center gap-3">
+      <hr className="flex-1 border-[var(--tcs-border)]" />
+      <span className="text-xs font-semibold text-[var(--tcs-text-faint)]">{label}</span>
+      <hr className="flex-1 border-[var(--tcs-border)]" />
     </div>
   )
 }
-
-// ── Alert ─────────────────────────────────────────────────────────────────────
 
 type AlertType = 'info' | 'success' | 'warning' | 'error'
 
@@ -201,48 +196,57 @@ interface AlertProps {
   className?: string
 }
 
-const alertStyles: Record<AlertType, { wrap: string; icon: string }> = {
-  info: { wrap: 'bg-[#EFF6FF] border-[#BFDBFE] text-[#1E40AF]', icon: 'ℹ️' },
-  success: { wrap: 'bg-[#ECFDF5] border-[#A7F3D0] text-[#065F46]', icon: '✓' },
-  warning: { wrap: 'bg-[#FFFBEB] border-[#FDE68A] text-[#92400E]', icon: '⚠' },
-  error: { wrap: 'bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]', icon: '✕' },
+const alertStyles: Record<AlertType, { wrap: string; icon: ReactNode }> = {
+  info: {
+    wrap: 'bg-[var(--tcs-info-soft)] border-[#c7d6f6] text-[var(--tcs-brand-800)]',
+    icon: <path d="M8 1a7 7 0 110 14A7 7 0 018 1zm.75 6.25a.75.75 0 00-1.5 0v4a.75.75 0 001.5 0v-4zM8 4.5a.875.875 0 100 1.75A.875.875 0 008 4.5z" />,
+  },
+  success: {
+    wrap: 'bg-[var(--tcs-success-soft)] border-[#b7dfcc] text-[#08714d]',
+    icon: <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 111.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" />,
+  },
+  warning: {
+    wrap: 'bg-[var(--tcs-warning-soft)] border-[#efd38e] text-[#8a5b12]',
+    icon: <path d="M8 1.5l7 12H1l7-12zm0 4a.75.75 0 00-.75.75v3a.75.75 0 001.5 0v-3A.75.75 0 008 5.5zm0 6a.8.8 0 100 1.6.8.8 0 000-1.6z" />,
+  },
+  error: {
+    wrap: 'bg-[var(--tcs-danger-soft)] border-[#ecc1bd] text-[#9b312c]',
+    icon: <path d="M8 1a7 7 0 110 14A7 7 0 018 1zM5.72 5.72a.75.75 0 000 1.06L6.94 8 5.72 9.22a.75.75 0 101.06 1.06L8 9.06l1.22 1.22a.75.75 0 101.06-1.06L9.06 8l1.22-1.22a.75.75 0 10-1.06-1.06L8 6.94 6.78 5.72a.75.75 0 00-1.06 0z" />,
+  },
 }
 
 export function Alert({ type, title, children, className = '' }: AlertProps) {
   const s = alertStyles[type]
   return (
-    <div className={`rounded-xl border px-4 py-3 text-sm ${s.wrap} ${className}`}>
-      {title && <p className="font-semibold mb-0.5">{title}</p>}
-      <p className="leading-relaxed">{children}</p>
+    <div className={`flex gap-3 rounded-[var(--tcs-radius-md)] border px-4 py-3 text-sm ${s.wrap} ${className}`}>
+      <svg className="mt-0.5 h-4 w-4 shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">{s.icon}</svg>
+      <div>
+        {title && <p className="mb-0.5 font-bold">{title}</p>}
+        <p className="leading-relaxed">{children}</p>
+      </div>
     </div>
   )
 }
-
-// ── Logo ───────────────────────────────────────────────────────────────────────
 
 export function Logo({ size = 'md' }: { size?: 'sm' | 'md' | 'lg' }) {
-  const sizes = { sm: 'text-lg', md: 'text-2xl', lg: 'text-3xl' }
-  const iconSizes = { sm: 'w-7 h-7', md: 'w-9 h-9', lg: 'w-11 h-11' }
+  const textSizes = { sm: 'text-base', md: 'text-xl', lg: 'text-2xl' }
+  const iconSizes = { sm: 'h-8 w-8', md: 'h-10 w-10', lg: 'h-12 w-12' }
   return (
     <div className="flex items-center gap-2.5">
-      <div className={`${iconSizes[size]} rounded-xl bg-[#1746A2] flex items-center justify-center shrink-0`}>
-        <svg viewBox="0 0 36 36" fill="none" className="w-5/6 h-5/6">
-          <path d="M10 22c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-          <circle cx="18" cy="13" r="4" fill="white" fillOpacity=".25" stroke="white" strokeWidth="2" />
-          <path d="M6 28h24" stroke="white" strokeWidth="2" strokeLinecap="round" opacity=".4" />
-          <circle cx="9" cy="10" r="2.5" fill="#7DD3FC" />
-          <circle cx="27" cy="10" r="2.5" fill="#7DD3FC" />
+      <div className={`${iconSizes[size]} flex shrink-0 items-center justify-center rounded-[var(--tcs-radius-md)] bg-[var(--tcs-brand-900)] shadow-[var(--tcs-shadow-sm)]`}>
+        <svg viewBox="0 0 40 40" fill="none" className="h-4/5 w-4/5" aria-hidden="true">
+          <path d="M10 25.5c0-5.52 4.48-10 10-10s10 4.48 10 10" stroke="white" strokeWidth="2.8" strokeLinecap="round" />
+          <circle cx="20" cy="13.5" r="4.2" fill="#9cc7ff" stroke="white" strokeWidth="2" />
+          <path d="M8 29h24M12 33h16" stroke="#9cc7ff" strokeWidth="2.4" strokeLinecap="round" />
         </svg>
       </div>
-      <div>
-        <div className={`display-font font-800 leading-none text-[#0D1117] ${sizes[size]}`}>TCS</div>
-        <div className="text-[10px] text-[#6B7280] font-medium tracking-wide uppercase leading-none mt-0.5">Thrift Core System</div>
+      <div className="min-w-0">
+        <div className={`display-font font-extrabold leading-none tracking-normal text-[var(--tcs-text)] ${textSizes[size]}`}>TCS</div>
+        <div className="mt-0.5 truncate text-[10px] font-bold uppercase leading-none tracking-[0.12em] text-[var(--tcs-text-muted)]">Thrift Core System</div>
       </div>
     </div>
   )
 }
-
-// ── Step Indicator ─────────────────────────────────────────────────────────────
 
 interface StepIndicatorProps {
   steps: { label: string; sublabel?: string }[]
@@ -257,20 +261,20 @@ export function StepIndicator({ steps, current, completed }: StepIndicatorProps)
         const done = completed.includes(i)
         const active = current === i
         return (
-          <li key={i} className="flex items-start gap-3">
+          <li key={step.label} className="flex items-start gap-3">
             <div className="flex flex-col items-center">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-colors ${done ? 'bg-[#059669] text-white' : active ? 'bg-[#1746A2] text-white ring-4 ring-[#C7D2FE]' : 'bg-[#F1F3F8] text-[#9CA3AF]'}`}>
+              <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors ${done ? 'bg-[var(--tcs-success)] text-white' : active ? 'bg-[var(--tcs-brand)] text-white ring-4 ring-[rgba(21,84,192,0.14)]' : 'bg-[var(--tcs-surface-muted)] text-[var(--tcs-text-faint)]'}`}>
                 {done ? (
-                  <svg className="w-3.5 h-3.5" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" />
+                  <svg className="h-3.5 w-3.5" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                    <path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 111.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z" />
                   </svg>
                 ) : i + 1}
               </div>
-              {i < steps.length - 1 && <div className={`w-px flex-1 min-h-[20px] mt-1 ${done ? 'bg-[#059669]' : 'bg-[#E2E6F0]'}`} />}
+              {i < steps.length - 1 && <div className={`mt-1 min-h-[20px] w-px flex-1 ${done ? 'bg-[var(--tcs-success)]' : 'bg-[var(--tcs-border)]'}`} />}
             </div>
             <div className="pb-4">
-              <p className={`text-sm font-semibold leading-none ${active ? 'text-[#1746A2]' : done ? 'text-[#059669]' : 'text-[#9CA3AF]'}`}>{step.label}</p>
-              {step.sublabel && <p className="text-xs text-[#9CA3AF] mt-0.5">{step.sublabel}</p>}
+              <p className={`text-sm font-semibold leading-none ${active ? 'text-[var(--tcs-brand)]' : done ? 'text-[var(--tcs-success)]' : 'text-[var(--tcs-text-faint)]'}`}>{step.label}</p>
+              {step.sublabel && <p className="mt-1 text-xs text-[var(--tcs-text-muted)]">{step.sublabel}</p>}
             </div>
           </li>
         )
