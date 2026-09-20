@@ -7,7 +7,7 @@ interface Props {
   communityId?: string
 }
 
-export function JoinRequestSubmitted({ navigate, communityId }: Props) {
+export function JoinRequestSubmitted({ navigate }: Props) {
   return (
     <AppShell navigate={navigate} activeView="discover">
       <div className="flex-1 flex items-center justify-center px-6 py-12">

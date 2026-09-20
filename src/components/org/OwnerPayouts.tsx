@@ -279,7 +279,7 @@ export function OwnerPayouts({ navigate }: Props) {
     )
   }
 
-  const Section = ({ title, items, empty }: { title: string; items: ExtendedPayout[]; empty?: string }) =>
+  const Section = ({ title, items }: { title: string; items: ExtendedPayout[]; empty?: string }) =>
     items.length === 0 ? null : (
       <div>
         <p className="text-xs font-bold text-[#9CA3AF] uppercase tracking-wide mb-3">{title}</p>

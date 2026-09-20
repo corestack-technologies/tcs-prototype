@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Badge } from '../ui'
 import type { View, NavMeta } from '../../App'
 
 interface Props { navigate: (v: View, meta?: NavMeta) => void }

@@ -7,6 +7,7 @@ const port = Number.parseInt(process.env.PORT || '8443', 10)
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: { manifest: true },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

@@ -1,3 +1,5 @@
+import '../../clients/member.css'
+import { Dialog } from '../../design/foundation'
 import { useState, type ReactNode } from 'react'
 import { Logo } from '../ui'
 import type { View, NavMeta } from '../../App'
@@ -65,7 +67,7 @@ export function AppShell({
     },
     {
       title: 'Account',
-      items: [{ label: 'Profile and identity', icon: icons.profile, view: 'dashboard' }],
+      items: [{ label: 'Profile and identity', icon: icons.profile, view: 'client-profile' }],
     },
   ]
 
@@ -138,23 +140,18 @@ export function AppShell({
   )
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--tcs-bg-cool)]">
+    <div className="member-experience flex min-h-dvh bg-[var(--tcs-bg-cool)]">
       <aside className="hidden w-64 shrink-0 border-r border-[var(--tcs-border)] bg-[var(--tcs-surface-raised)] lg:flex">
         <Sidebar />
       </aside>
 
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 lg:hidden">
-          <button className="absolute inset-0 bg-[rgba(17,24,39,0.45)]" onClick={() => setMobileOpen(false)} aria-label="Close navigation" />
-          <aside className="absolute inset-y-0 left-0 z-50 w-[280px] max-w-[82vw] bg-[var(--tcs-surface-raised)] shadow-[var(--tcs-shadow-lg)]">
-            <Sidebar />
-          </aside>
-        </div>
+        <Dialog label="Member navigation" drawer onClose={()=>setMobileOpen(false)}><Sidebar /></Dialog>
       )}
 
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+      <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex shrink-0 items-center justify-between border-b border-[var(--tcs-border)] bg-[var(--tcs-surface-raised)] px-4 py-3 lg:hidden">
-          <button onClick={() => setMobileOpen(true)} className="rounded-[var(--tcs-radius-sm)] p-2 text-[var(--tcs-text-soft)] hover:bg-[var(--tcs-surface-muted)]" aria-label="Open navigation">
+          <button onClick={() => setMobileOpen(true)} className="rounded-[var(--tcs-radius-sm)] p-2 text-[var(--tcs-text-soft)] hover:bg-[var(--tcs-surface-muted)]" aria-label="Open navigation" aria-expanded={mobileOpen}>
             <SvgIcon path={icons.menu} className="h-5 w-5" />
           </button>
           <Logo size="sm" />

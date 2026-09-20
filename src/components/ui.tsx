@@ -1,4 +1,6 @@
-import { type ReactNode, type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
+import { createContext, useContext, useId, type ReactNode, type InputHTMLAttributes, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
+
+const FieldContext = createContext<{ id: string; describedBy?: string; invalid?: boolean } | null>(null)
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'success'
 type ButtonSize = 'sm' | 'md' | 'lg'
@@ -19,16 +21,17 @@ const variantStyles: Record<ButtonVariant, string> = {
 }
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: 'h-9 px-3 text-sm rounded-[var(--tcs-radius-sm)]',
-  md: 'h-10 px-4 text-sm rounded-[var(--tcs-radius-md)]',
+  sm: 'min-h-11 px-3 text-sm rounded-[var(--tcs-radius-sm)]',
+  md: 'min-h-11 px-4 text-sm rounded-[var(--tcs-radius-md)]',
   lg: 'h-12 px-5 text-base rounded-[var(--tcs-radius-md)]',
 }
 
 export function Button({ variant = 'primary', size = 'md', loading, children, className = '', disabled, ...props }: ButtonProps) {
   return (
     <button
+      aria-busy={loading || undefined}
       disabled={disabled || loading}
-      className={`inline-flex items-center justify-center gap-2 whitespace-nowrap font-semibold transition-all duration-150 disabled:opacity-55 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(21,84,192,0.18)] focus-visible:ring-offset-2 focus-visible:ring-offset-white ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 whitespace-normal text-center font-semibold transition-all duration-150 disabled:opacity-55 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-[3px] focus-visible:ring-[rgba(21,84,192,0.18)] focus-visible:ring-offset-2 focus-visible:ring-offset-white ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
       {...props}
     >
       {loading && (
@@ -51,27 +54,28 @@ interface FieldProps {
 }
 
 export function Field({ label, hint, error, required, children }: FieldProps) {
+  const id = useId()
   return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-semibold text-[var(--tcs-text)]">
+    <FieldContext.Provider value={{ id, describedBy: hint || error ? `${id}-help` : undefined, invalid: !!error }}><div className="flex flex-col gap-1.5">
+      <label htmlFor={id} className="text-sm font-semibold text-[var(--tcs-text)]">
         {label}
         {required && <span className="ml-1 text-[var(--tcs-danger)]">*</span>}
       </label>
       {children}
-      {hint && !error && <p className="text-xs leading-relaxed text-[var(--tcs-text-muted)]">{hint}</p>}
+      {hint && !error && <p id={`${id}-help`} className="text-xs leading-relaxed text-[var(--tcs-text-muted)]">{hint}</p>}
       {error && (
-        <p className="flex items-center gap-1.5 text-xs font-medium text-[var(--tcs-danger)]">
+        <p id={`${id}-help`} role="alert" className="flex items-center gap-1.5 text-xs font-medium text-[var(--tcs-danger)]">
           <svg className="h-3.5 w-3.5 shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
             <path d="M8 1a7 7 0 100 14A7 7 0 008 1zm-.75 4.25a.75.75 0 011.5 0v3a.75.75 0 01-1.5 0v-3zm.75 6.5a.875.875 0 110-1.75.875.875 0 010 1.75z" />
           </svg>
           {error}
         </p>
       )}
-    </div>
+    </div></FieldContext.Provider>
   )
 }
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'prefix'> {
   error?: boolean
   prefix?: ReactNode
   suffix?: ReactNode
@@ -81,6 +85,8 @@ const controlBase = 'w-full text-sm text-[var(--tcs-text)] placeholder:text-[var
 const controlFrame = 'bg-white border rounded-[var(--tcs-radius-md)] focus-within:ring-[3px] focus-within:ring-[rgba(21,84,192,0.18)] focus-within:border-[var(--tcs-brand)]'
 
 export function Input({ error, prefix, suffix, className = '', ...props }: InputProps) {
+  const field = useContext(FieldContext)
+  props = { id: field?.id, 'aria-describedby': field?.describedBy, 'aria-invalid': field?.invalid, ...props }
   const border = error ? 'border-[var(--tcs-danger)]' : 'border-[var(--tcs-border)]'
   if (prefix || suffix) {
     return (
@@ -106,6 +112,8 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 }
 
 export function Select({ error, children, className = '', ...props }: SelectProps) {
+  const field = useContext(FieldContext)
+  props = { id: field?.id, 'aria-describedby': field?.describedBy, 'aria-invalid': field?.invalid, ...props }
   return (
     <select
       className={`h-11 w-full appearance-none rounded-[var(--tcs-radius-md)] border bg-white px-3.5 text-sm text-[var(--tcs-text)] transition-colors focus:outline-none focus:ring-[3px] focus:ring-[rgba(21,84,192,0.18)] focus:border-[var(--tcs-brand)] ${error ? 'border-[var(--tcs-danger)]' : 'border-[var(--tcs-border)]'} ${className}`}
@@ -121,6 +129,8 @@ interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 }
 
 export function Textarea({ error, className = '', ...props }: TextareaProps) {
+  const field = useContext(FieldContext)
+  props = { id: field?.id, 'aria-describedby': field?.describedBy, 'aria-invalid': field?.invalid, ...props }
   return (
     <textarea
       className={`w-full resize-none rounded-[var(--tcs-radius-md)] border bg-white px-3.5 py-2.5 text-sm text-[var(--tcs-text)] placeholder:text-[var(--tcs-text-faint)] transition-colors focus:outline-none focus:ring-[3px] focus:ring-[rgba(21,84,192,0.18)] focus:border-[var(--tcs-brand)] ${error ? 'border-[var(--tcs-danger)]' : 'border-[var(--tcs-border)]'} ${className}`}
@@ -169,8 +179,8 @@ const badgeDot: Record<BadgeVariant, string> = {
 
 export function Badge({ variant, children }: BadgeProps) {
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-[var(--tcs-radius-xs)] border px-2 py-1 text-xs font-bold ${badgeStyles[variant]}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${badgeDot[variant]}`} />
+    <span className={`inline-flex max-w-full items-center gap-1.5 whitespace-normal rounded-[var(--tcs-radius-xs)] border px-2 py-1 text-xs font-bold ${badgeStyles[variant]}`}>
+      <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${badgeDot[variant]}`} />
       {children}
     </span>
   )
@@ -218,7 +228,7 @@ const alertStyles: Record<AlertType, { wrap: string; icon: ReactNode }> = {
 export function Alert({ type, title, children, className = '' }: AlertProps) {
   const s = alertStyles[type]
   return (
-    <div className={`flex gap-3 rounded-[var(--tcs-radius-md)] border px-4 py-3 text-sm ${s.wrap} ${className}`}>
+    <div role={type === 'error' ? 'alert' : 'status'} className={`flex gap-3 rounded-[var(--tcs-radius-md)] border px-4 py-3 text-sm ${s.wrap} ${className}`}>
       <svg className="mt-0.5 h-4 w-4 shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">{s.icon}</svg>
       <div>
         {title && <p className="mb-0.5 font-bold">{title}</p>}

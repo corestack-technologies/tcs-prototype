@@ -1,3 +1,4 @@
+import { DisplayDate } from '../../design/foundation'
 import { useState } from 'react'
 import { Badge } from '../ui'
 import { OwnerShell } from './OwnerShell'
@@ -51,7 +52,7 @@ export function OwnerJoinRequests({ navigate }: Props) {
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-[#0D1117]">{req.name}</p>
             <p className="text-xs text-[#6B7280] mt-0.5">{req.occupation} · {req.employer}</p>
-            <p className="text-xs text-[#9CA3AF] mt-0.5">Requested {req.requestedAt} → {req.groupName}</p>
+            <p className="text-xs text-[#9CA3AF] mt-0.5">Requested <DisplayDate value={req.requestedAt}/> → {req.groupName}</p>
           </div>
           <div className="shrink-0">
             {req.status === 'pending' ? <Badge variant="pending">Pending</Badge> : req.status === 'approved' ? <Badge variant="verified">Approved</Badge> : <Badge variant="rejected">Declined</Badge>}

@@ -1,0 +1,15 @@
+import type {AccessState,SecuritySession,SecurityEvent} from './model.ts'
+export function seedSecurity(state:AccessState){
+ const at='2026-09-15T09:00:00Z'
+ state.users.push({id:'locked-user',name:'Kemi',identifier:'kemi.locked@corestack.example',status:'Active',roleIds:['analyst'],createdAt:at,createdBy:'Prototype seed',activatedAt:at})
+ for(const u of state.users)u.security={locked:['locked-user','suspended-user','deactivated-user'].includes(u.id),failedAttempts:['locked-user','suspended-user','deactivated-user'].includes(u.id)?5:0,...(['locked-user','suspended-user','deactivated-user'].includes(u.id)?{lockedAt:at,lockReason:'Repeated failed logins (deterministic demo)',lastFailureAt:at}:{lastSuccessAt:at})}
+ const sessions:SecuritySession[]=state.users.filter(u=>u.status==='Active'&&!u.security?.locked).map(u=>({id:'session-'+u.id,userId:u.id,status:'Active',createdAt:at,lastActivityAt:at,expiresAt:'2099-12-31T23:59:59Z',device:'Demo desktop · Chrome',network:'192.0.2.10 · Lagos (demo)',trust:'Trusted demo device'}))
+ sessions.push({id:'session-finance-mobile',userId:'finance-reviewer',status:'Active',createdAt:at,lastActivityAt:at,expiresAt:'2099-12-31T23:59:59Z',device:'Demo mobile · Safari',network:'198.51.100.22 · Abuja (demo)',trust:'New device'},{id:'session-old-expired',userId:'ops-analyst',status:'Expired',createdAt:'2026-09-01T09:00:00Z',lastActivityAt:'2026-09-01T10:00:00Z',expiresAt:'2026-09-02T09:00:00Z',device:'Demo laptop · Firefox',network:'192.0.2.12 (demo)',trust:'Untrusted demo device'},{id:'session-old-revoked',userId:'finance-reviewer',status:'Revoked',createdAt:'2026-09-01T09:00:00Z',lastActivityAt:'2026-09-01T10:00:00Z',expiresAt:'2099-12-31T23:59:59Z',device:'Retired demo laptop',network:'192.0.2.13 (demo)',trust:'Untrusted demo device',revokedAt:'2026-09-01T11:00:00Z',revokedBy:'Prototype seed',reason:'Retired device demo'})
+ const events:SecurityEvent[]=sessions.map(s=>({id:'created-'+s.id,type:'Session Created',userId:s.userId,sessionId:s.id,at:s.createdAt,result:'Simulated',reason:'Deterministic prototype session',context:s.device}))
+ events.push({id:'seed-login-success',type:'Login Success',userId:'finance-reviewer',at,result:'Simulated success',reason:'Successful login example; no credentials checked',sessionId:'session-finance-reviewer'},{id:'seed-new-device',type:'New Device',userId:'finance-reviewer',at,result:'Context only',reason:'New demo browser observed; no fingerprinting or challenge',sessionId:'session-finance-mobile'},{id:'seed-revocation',type:'Session Revoked',userId:'finance-reviewer',sessionId:'session-old-revoked',at:'2026-09-01T11:00:00Z',result:'Revoked',reason:'Retired device demo'})
+ for(const u of state.users.filter(u=>u.security?.locked)){
+  for(let n=1;n<=5;n++)events.push({id:`failure-${u.id}-${n}`,type:'Login Failure',userId:u.id,at:`2026-09-15T08:5${n}:00Z`,result:'Simulated failure',reason:`Failed login example ${n} of 5`,context:'Demo browser · 203.0.113.10'})
+  events.push({id:'lock-'+u.id,type:'Account Locked',userId:u.id,at,result:'Locked',reason:u.security!.lockReason!})
+ }
+ state.security={sessions,events}
+}

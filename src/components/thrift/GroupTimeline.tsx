@@ -161,7 +161,6 @@ export function GroupTimeline({ navigate, groupId }: Props) {
             <div className="flex flex-col gap-0">
               {events.map((event, i) => {
                 const cfg = typeConfig[event.type]
-                const isPast = event.type === 'contribution' || event.type === 'payout-received' || event.type === 'joined' || event.type === 'cycle-complete'
                 const isUpcoming = event.type === 'upcoming'
                 const isPayoutReceived = event.type === 'payout-received'
 

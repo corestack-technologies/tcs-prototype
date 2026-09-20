@@ -1,0 +1,3 @@
+﻿export function PenaltyTerms({rate}:{rate:number}) {
+ return <>{rate} bps/day ({rate / 100}% daily), simple and non-compounding on outstanding required principal after grace. Platform prototype ceiling: 10 bps/day, not a cap on accrued charges. Zero disables accrual. Partial payments reduce future accrual; full principal payment stops it. Audited reductions do not waive principal. This rate is locked at activation. Post-Payout Default requires payout receipt and unpaid required principal seven full calendar days after grace expiry. Never applies to skipped optional own-Round contribution.</>
+}

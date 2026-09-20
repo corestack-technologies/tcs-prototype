@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Badge } from '../ui'
+import { Badge } from '../ui'
 import { AppShell } from './AppShell'
 import type { View, NavMeta } from '../../App'
 
@@ -172,7 +172,7 @@ export function DiscoverCommunities({ navigate }: Props) {
               <path d="M6.5 1a5.5 5.5 0 104.472 8.719l3.155 3.154a.75.75 0 001.06-1.06l-3.154-3.155A5.5 5.5 0 006.5 1zM2.5 6.5a4 4 0 118 0 4 4 0 01-8 0z" />
             </svg>
             <input
-              type="search"
+              type="search" aria-label="Search Groups by name or location"
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search by name or location…"
@@ -182,9 +182,9 @@ export function DiscoverCommunities({ navigate }: Props) {
         </div>
       </div>
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-col lg:flex-row flex-1">
         {/* Filter sidebar */}
-        <aside className="hidden lg:flex flex-col w-56 shrink-0 bg-white border-r border-[#E2E6F0] px-5 py-6 gap-7">
+        <aside className="flex flex-wrap lg:flex-col lg:w-56 shrink-0 bg-white border-r border-[#E2E6F0] px-5 py-6 gap-7">
           {/* Frequency */}
           <div>
             <p className="text-[10px] font-bold text-[#9CA3AF] uppercase tracking-widest mb-3">Contribution cycle</p>
@@ -192,6 +192,7 @@ export function DiscoverCommunities({ navigate }: Props) {
               {(['All', ...FREQUENCIES] as const).map(f => (
                 <button
                   key={f}
+                  aria-pressed={freqFilter === f}
                   onClick={() => setFreqFilter(f)}
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left ${freqFilter === f ? 'bg-[#EEF2FF] text-[#1746A2]' : 'text-[#6B7280] hover:bg-[#F1F3F8]'}`}
                 >
@@ -211,6 +212,7 @@ export function DiscoverCommunities({ navigate }: Props) {
               {AMOUNTS.map((a, i) => (
                 <button
                   key={i}
+                  aria-pressed={amountFilter === i}
                   onClick={() => setAmountFilter(i)}
                   className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left ${amountFilter === i ? 'bg-[#EEF2FF] text-[#1746A2]' : 'text-[#6B7280] hover:bg-[#F1F3F8]'}`}
                 >
@@ -227,12 +229,7 @@ export function DiscoverCommunities({ navigate }: Props) {
           <div>
             <p className="text-[10px] font-bold text-[#9CA3AF] uppercase tracking-widest mb-3">Availability</p>
             <label className="flex items-center gap-3 cursor-pointer">
-              <div
-                onClick={() => setAvailableOnly(!availableOnly)}
-                className={`w-10 h-6 rounded-full transition-colors relative cursor-pointer ${availableOnly ? 'bg-[#1746A2]' : 'bg-[#E2E6F0]'}`}
-              >
-                <div className={`absolute top-1 w-4 h-4 rounded-full bg-white shadow transition-transform ${availableOnly ? 'translate-x-5' : 'translate-x-1'}`} />
-              </div>
+              <input type="checkbox" checked={availableOnly} onChange={e=>setAvailableOnly(e.target.checked)}/>
               <span className="text-sm text-[#374151] font-medium">Open spots only</span>
             </label>
           </div>
@@ -241,10 +238,10 @@ export function DiscoverCommunities({ navigate }: Props) {
         {/* Grid */}
         <main className="flex-1 overflow-y-auto px-6 lg:px-8 py-6">
           {/* Sort bar */}
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
             <p className="text-sm text-[#6B7280]">Showing <strong className="text-[#0D1117]">{filtered.length}</strong> communities</p>
             <select
-              value={sort}
+              aria-label="Sort Groups" value={sort}
               onChange={e => setSort(e.target.value as SortKey)}
               className="text-sm border border-[#E2E6F0] rounded-lg px-3 py-2 bg-white text-[#374151] focus:outline-none focus:ring-2 focus:ring-[#1746A2]"
             >

@@ -62,7 +62,7 @@ const COMMUNITY = {
 
 type Tab = 'overview' | 'members' | 'schedule' | 'rules'
 
-export function CommunityDetail({ navigate, communityId }: Props) {
+export function CommunityDetail({ navigate }: Props) {
   const [tab, setTab] = useState<Tab>('overview')
   const c = COMMUNITY
   const fillPercent = Math.round((c.members / c.maxMembers) * 100)
@@ -268,21 +268,21 @@ export function CommunityDetail({ navigate, communityId }: Props) {
               <div className="px-5 py-4 border-b border-[#F1F3F8] bg-[#F8FAFF]">
                 <p className="text-xs font-bold text-[#9CA3AF] uppercase tracking-wide">Payout schedule — 2025</p>
               </div>
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-[#F1F3F8]">
+              <table role="table" className="member-records-table w-full">
+                <thead role="rowgroup">
+                  <tr role="row" className="border-b border-[#F1F3F8]">
                     {['Month', 'Recipient', 'Payout amount', 'Status'].map(h => (
-                      <th key={h} className="text-left px-5 py-3 text-xs font-bold text-[#9CA3AF] uppercase tracking-wide">{h}</th>
+                      <th scope="col" key={h} className="text-left px-5 py-3 text-xs font-bold text-[#9CA3AF] uppercase tracking-wide">{h}</th>
                     ))}
                   </tr>
                 </thead>
-                <tbody>
+                <tbody role="rowgroup">
                   {c.payoutSchedule.map((row, i) => (
-                    <tr key={i} className={`border-b border-[#F1F3F8] ${i === c.payoutSchedule.length - 1 ? 'border-0' : ''}`}>
-                      <td className="px-5 py-3.5 text-sm font-semibold text-[#0D1117]">{row.month}</td>
-                      <td className="px-5 py-3.5 text-sm text-[#374151]">{row.member}</td>
-                      <td className="px-5 py-3.5 text-sm font-semibold text-[#059669]">₦{row.amount.toLocaleString()}</td>
-                      <td className="px-5 py-3.5">
+                    <tr role="row" key={i} className={`border-b border-[#F1F3F8] ${i === c.payoutSchedule.length - 1 ? 'border-0' : ''}`}>
+                      <td role="cell" data-label="Month" className="px-5 py-3.5 text-sm font-semibold text-[#0D1117]">{row.month}</td>
+                      <td role="cell" data-label="Member" className="px-5 py-3.5 text-sm text-[#374151]">{row.member}</td>
+                      <td role="cell" data-label="Amount" className="px-5 py-3.5 text-sm font-semibold text-[#059669]">₦{row.amount.toLocaleString()}</td>
+                      <td role="cell" data-label="Status" className="px-5 py-3.5">
                         {row.status === 'paid' && <Badge variant="verified">Paid out</Badge>}
                         {row.status === 'upcoming' && <Badge variant="pending">Upcoming</Badge>}
                         {row.status === 'open' && <Badge variant="not-started">TBD</Badge>}

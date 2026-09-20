@@ -1,0 +1,21 @@
+/* Member-only presentation: shared Owner/Internal components retain their styling. */
+.member-experience{color:var(--tcs-text);background:var(--tcs-bg-cool)}
+.member-experience #client-main{max-width:76rem;padding-top:1.75rem;padding-bottom:2.5rem}
+.member-experience h1{font-size:clamp(1.55rem,3vw,2rem);line-height:1.2;letter-spacing:-.035em;font-weight:700}
+.member-experience h2{letter-spacing:-.02em}.member-experience h3{line-height:1.4}
+.member-experience section.bg-white,.member-experience article.bg-white,.member-experience .member-card{border:1px solid var(--tcs-border);border-radius:var(--tcs-radius-xl);box-shadow:0 6px 24px rgb(26 57 104 / .035)}
+.member-experience dl dd{overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.member-experience dl dt{color:var(--tcs-text-muted);line-height:1.5}
+.member-experience input,.member-experience select,.member-experience textarea{max-width:100%}.member-experience fieldset{min-width:0}
+.member-experience #client-main>div[class*="max-w-5xl"]{padding:0;max-width:none}
+.member-experience #client-main>div>section>h1{margin-top:.75rem}
+.member-experience .report-summary{border-top:3px solid var(--tcs-brand);font-variant-numeric:tabular-nums}.member-experience .report-summary p:last-child{color:var(--tcs-text-muted)}
+.member-next{border:1px solid var(--tcs-border);border-left:4px solid var(--tcs-brand);background:white;border-radius:var(--tcs-radius-lg);padding:1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.member-next p{font-size:.875rem;line-height:1.6;color:var(--tcs-text-muted)}.member-next h2{font-size:1rem;font-weight:700}
+.member-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.member-summary>div{background:var(--tcs-brand-subtle);padding:1rem;border-radius:var(--tcs-radius-md)}
+.member-experience .member-nav{padding-bottom:.5rem}.member-experience .member-nav button[aria-current=page]{background:var(--tcs-brand-subtle);border-radius:var(--tcs-radius-sm);padding-inline:.75rem}
+.member-experience .member-demo-notice{border:1px solid var(--tcs-border);background:transparent;color:var(--tcs-text-muted);font-size:.75rem;padding:.5rem .75rem}
+.member-experience .member-history{margin-top:1.5rem}.member-experience .member-history>summary{font-weight:600;color:var(--tcs-text-muted)}
+@media(max-width:639px){.member-experience #client-main{padding-top:1.25rem}.member-experience dl.grid-cols-2{grid-template-columns:minmax(0,1fr)}.member-experience .member-summary{grid-template-columns:minmax(0,1fr)}.member-experience .member-next>button{width:100%}.member-experience .flex.items-start.justify-between{flex-wrap:wrap}.member-experience .member-records-table thead{position:absolute;width:1px;height:1px;clip-path:inset(50%);overflow:hidden}.member-experience .member-records-table,.member-experience .member-records-table tbody,.member-experience .member-records-table tr,.member-experience .member-records-table td{display:block;width:100%;min-width:0}.member-experience .member-records-table tr{border:1px solid var(--tcs-border);border-radius:var(--tcs-radius-md);margin-bottom:1rem;padding:.75rem}.member-experience .member-records-table td{border:0;padding:.5rem 0;white-space:normal}.member-experience .member-records-table td:before{content:attr(data-label);display:block;color:var(--tcs-text-muted);font-size:.75rem;margin-bottom:.25rem}}
+
+.member-experience .member-financial .grid>div[class*="rounded"]{border:1px solid var(--tcs-border);background:var(--tcs-brand-subtle)}.member-experience .member-financial .grid>div p{overflow-wrap:anywhere}.member-experience .member-financial .grid>div p[class*="font-bold"]{font-variant-numeric:tabular-nums}.member-experience .member-financial>section>h2{margin-bottom:1rem}
+@media(max-width:639px){.member-experience .member-financial .grid-cols-2{grid-template-columns:minmax(0,1fr)}.member-experience .member-financial .grid-cols-3{grid-template-columns:minmax(0,1fr)}.member-experience main .text-\[10px\]{font-size:.75rem}.member-experience main .text-\[11px\]{font-size:.75rem}}

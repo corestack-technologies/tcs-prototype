@@ -1,3 +1,4 @@
+import { DisplayDate } from '../../design/foundation'
 import { useState } from 'react'
 import { Badge, Alert } from '../ui'
 import { OwnerShell } from './OwnerShell'
@@ -48,7 +49,7 @@ export function OwnerVerification({ navigate }: Props) {
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold text-[#0D1117]">{item.memberName}</p>
             <p className="text-xs text-[#6B7280] mt-0.5">{item.groupName} · Round {item.roundNumber}</p>
-            <p className="text-xs text-[#9CA3AF] mt-0.5">Flagged {item.submittedAt}</p>
+            <p className="text-xs text-[#9CA3AF] mt-0.5">Flagged <DisplayDate value={item.submittedAt}/></p>
           </div>
           <div className="text-right shrink-0">
             <p className="text-sm font-bold text-[#0D1117]">₦{item.amount.toLocaleString()}</p>
